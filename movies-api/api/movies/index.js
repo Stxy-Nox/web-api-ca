@@ -5,7 +5,15 @@ import {
     getUpcomingMovies,
     getGenres,
     getMovies,
-    getPopular
+    getPopular,
+    getTrendings,
+    getMovie,
+    getPeople,
+    getPresonCredits,
+    getLanguages,
+    getMovieImages,
+    getPersonImages,
+    getMovieReviews
   } from '../tmdb-api';
 
 const router = express.Router();
@@ -65,10 +73,68 @@ router.get('/tmdb/movies', asyncHandler(async (req, res) => {
 }));
 
 router.get('/tmdb/popularPeople', asyncHandler(async (req, res) => {
-    const popularPeople = await getPopular();
+    let { page = 1 } = req.query;
+    page = parseInt(page);
+
+    if (isNaN(page) || page <= 0) {
+        return res.status(400).json({ message: 'Invalid page parameter' });
+    }
+    const popularPeople = await getPopular(page);
     res.status(200).json(popularPeople);
 }));
 
+router.get('/tmdb/trending', asyncHandler(async (req, res) => {
+    const { timeWindow = "day" } = req.query;
+    const trendings = await getTrendings(timeWindow);
+    res.status(200).json(trendings);
+}));
+
+
+router.get('/tmdb/movie/:id', asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const movie = await getMovie(id);
+    res.status(200).json(movie);
+}));
+
+
+router.get('/tmdb/person/:id', asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const person = await getPeople(id);
+    res.status(200).json(person);
+}));
+
+router.get('/tmdb/person/:id/credits', asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const credits = await getPresonCredits(id);
+    res.status(200).json(credits);
+}));
+
+
+router.get('/tmdb/languages', asyncHandler(async (req, res) => {
+    const languages = await getLanguages();
+    res.status(200).json(languages);
+}));
+
+
+router.get('/tmdb/movie/:id/images', asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const images = await getMovieImages(id);
+    res.status(200).json(images);
+}));
+
+
+router.get('/tmdb/person/:id/images', asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const images = await getPersonImages(id);
+    res.status(200).json(images);
+}));
+
+
+router.get('/tmdb/movie/:id/reviews', asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const reviews = await getMovieReviews(id);
+    res.status(200).json(reviews);
+}));
 export default router;
 
 
