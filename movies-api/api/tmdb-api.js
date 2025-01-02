@@ -61,3 +61,127 @@ export const getPopular = async (page = 1) => {
         throw error;
     }
 };
+
+export const getTrendings = async (timeWindow = "day") => {
+    try {
+        const response = await fetch(
+            `https://api.themoviedb.org/3/trending/movie/${timeWindow}?api_key=${process.env.TMDB_KEY}&language=en-US&page=${page}`
+        );
+        if (!response.ok) {
+            throw new Error(response.json().message);
+        }
+
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const getMovie = async (id = 939243) => {
+    try {
+        const response = await fetch(
+            `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.TMDB_KEY}&language=en-US&page=${page}`
+        );
+        if (!response.ok) {
+            throw new Error(response.json().message);
+        }
+
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const getPeople = async (id = 2786960) => {
+    try {
+        const response = await fetch(
+            `https://api.themoviedb.org/3/person/${id}?api_key=${process.env.TMDB_KEY}&language=en-US&page=${page}`
+        );
+        if (!response.ok) {
+            throw new Error(response.json().message);
+        }
+
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const getPresonCredits = async (id = 2786960) => {
+    try {
+        const response = await fetch(
+            `https://api.themoviedb.org/3/person/${id}/movie_credits?api_key=${process.env.TMDB_KEY}&language=en-US&page=${page}`
+        );
+        if (!response.ok) {
+            throw new Error(response.json().message);
+        }
+
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const getLanguages = async () => {
+    try {
+        const response = await fetch(
+            `https://api.themoviedb.org/3/configuration/languages?api_key=${process.env.TMDB_KEY}`
+        );
+  
+        if (!response.ok) {
+            throw new Error(response.json().message);
+        }
+  
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+  };
+
+  export const getMovieImages = async (id = 939243) => {
+    try {
+        const response = await fetch(
+            `https://api.themoviedb.org/3/movie/${id}/images?api_key=${process.env.TMDB_KEY}`
+        );
+  
+        if (!response.ok) {
+            throw new Error(response.json().message);
+        }
+  
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+  };
+
+  export const getPersonImages = async (id = 2786960) => {
+    try {
+        const response = await fetch(
+            `https://api.themoviedb.org/3/person/${id}/images?api_key=${process.env.TMDB_KEY}`
+        );
+  
+        if (!response.ok) {
+            throw new Error(response.json().message);
+        }
+  
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+  };
+
+  export const getMovieReviews = async (id = 939243) => {
+    try {
+        const response = await fetch(
+            `https://api.themoviedb.org/3/movie/${id}/reviews?api_key=${process.env.TMDB_KEY}`
+        );
+  
+        if (!response.ok) {
+            throw new Error(response.json().message);
+        }
+  
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+  };
