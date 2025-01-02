@@ -61,8 +61,4 @@ router.get('/tmdb/upcoming', asyncHandler(async (req, res) => {
     res.status(200).json(popularPeople);
 }));
 
-router.get('/tmdb/upcoming', asyncHandler(async (req, res) => {
-    const languages = await getLanguages();
-    res.status(200).json(languages);
-}));
-export default router;
+
