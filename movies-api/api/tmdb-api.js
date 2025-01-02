@@ -65,7 +65,7 @@ export const getPopular = async (page = 1) => {
 export const getTrendings = async (timeWindow = "day") => {
     try {
         const response = await fetch(
-            `https://api.themoviedb.org/3/trending/movie/${timeWindow}?api_key=${process.env.TMDB_KEY}&language=en-US&page=${page}`
+            `https://api.themoviedb.org/3/trending/movie/${timeWindow}?api_key=${process.env.TMDB_KEY}&language=en-US`
         );
         if (!response.ok) {
             throw new Error(response.json().message);
@@ -80,7 +80,7 @@ export const getTrendings = async (timeWindow = "day") => {
 export const getMovie = async (id = 939243) => {
     try {
         const response = await fetch(
-            `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.TMDB_KEY}&language=en-US&page=${page}`
+            `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.TMDB_KEY}&language=en-US`
         );
         if (!response.ok) {
             throw new Error(response.json().message);
@@ -95,7 +95,7 @@ export const getMovie = async (id = 939243) => {
 export const getPeople = async (id = 2786960) => {
     try {
         const response = await fetch(
-            `https://api.themoviedb.org/3/person/${id}?api_key=${process.env.TMDB_KEY}&language=en-US&page=${page}`
+            `https://api.themoviedb.org/3/person/${id}?api_key=${process.env.TMDB_KEY}`
         );
         if (!response.ok) {
             throw new Error(response.json().message);
@@ -110,7 +110,7 @@ export const getPeople = async (id = 2786960) => {
 export const getPresonCredits = async (id = 2786960) => {
     try {
         const response = await fetch(
-            `https://api.themoviedb.org/3/person/${id}/movie_credits?api_key=${process.env.TMDB_KEY}&language=en-US&page=${page}`
+            `https://api.themoviedb.org/3/person/${id}/movie_credits?api_key=${process.env.TMDB_KEY}`
         );
         if (!response.ok) {
             throw new Error(response.json().message);

@@ -135,6 +135,7 @@ router.get('/tmdb/movie/:id/reviews', asyncHandler(async (req, res) => {
     const reviews = await getMovieReviews(id);
     res.status(200).json(reviews);
 }));
+
 export default router;
 
 
