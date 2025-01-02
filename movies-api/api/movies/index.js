@@ -8,6 +8,7 @@ import {
 
 const router = express.Router();
 
+
 router.get('/', asyncHandler(async (req, res) => {
     let { page = 1, limit = 10 } = req.query; // destructure page and limit and set default values
     [page, limit] = [+page, +limit]; //trick to convert to numeric (req.query will contain string values)
@@ -50,4 +51,18 @@ router.get('/tmdb/genres', asyncHandler(async (req, res) => {
     res.status(200).json(genres);
 }));
 
+router.get('/tmdb/movies', asyncHandler(async (req, res) => {
+    const movies = await getMovies();
+    res.status(200).json(movies);
+}));
+
+router.get('/tmdb/upcoming', asyncHandler(async (req, res) => {
+    const popularPeople = await getPopular();
+    res.status(200).json(popularPeople);
+}));
+
+router.get('/tmdb/upcoming', asyncHandler(async (req, res) => {
+    const languages = await getLanguages();
+    res.status(200).json(languages);
+}));
 export default router;
