@@ -1,5 +1,6 @@
 import express from 'express';
 import User from './userModel';
+import Review from '../reviews/reviewModel';
 import asyncHandler from 'express-async-handler';
 const router = express.Router(); // eslint-disable-line
 import jwt from 'jsonwebtoken';
@@ -142,6 +143,37 @@ router.delete('/playlist',  async (req, res) => {
     
   });
 
+  router.post('/reviews/',  async (req, res) => {
+    const user = req.user;
+    if (!user) {
+      return res.status(404).json({ code: 404, msg: 'User not found.' });
+    }
+    if (!user.reviews) {
+        user.reviews = [];
+    }
+    const author = req.body.author;
+    const movieId = req.body.movieId;
+    const rating = req.body.rating;
+    const content = req.body.content;
 
+    if (!movieId || !content || !author || !rating) {
+        return res.status(400).json({ code: 400, msg: 'Need movieId , content, author and rating' });
+      }
+
+    const reviewData ={
+        userId: user._id,
+        author: author,
+        movieId: movieId,
+        rating: rating,
+        content: content
+    }
+    const newReview = await Review.create(reviewData);
+    user.reviews.push(newReview._id);
+    await user.save();
+    res.status(201).json({ code: 201, msg: 'Review added successfully.' });
+    
+  });
+
+  
 
 export default router;
