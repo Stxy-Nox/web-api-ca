@@ -8,7 +8,7 @@ import {
     getPopular,
     getTrendings,
     getMovie,
-    getPeople,
+    getPerson,
     getPresonCredits,
     getLanguages,
     getMovieImages,
@@ -83,7 +83,7 @@ router.get('/tmdb/popularPeople', asyncHandler(async (req, res) => {
     res.status(200).json(popularPeople);
 }));
 
-router.get('/tmdb/trending', asyncHandler(async (req, res) => {
+router.get('/tmdb/trending', asyncHandler(async (req, res) => {// /tmdb/trending/timeWindow=day or week
     const { timeWindow = "day" } = req.query;
     const trendings = await getTrendings(timeWindow);
     res.status(200).json(trendings);
@@ -99,7 +99,7 @@ router.get('/tmdb/movie/:id', asyncHandler(async (req, res) => {
 
 router.get('/tmdb/person/:id', asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const person = await getPeople(id);
+    const person = await getPerson(id);
     res.status(200).json(person);
 }));
 
