@@ -188,20 +188,38 @@ router.delete('/playlist',  async (req, res) => {
     res.status(200).json({ code: 200, msg: 'Review fetched successfully.', review });
     });
 
-    router.get('/reviews/',  async (req, res) => {
-        const user = req.user;
+router.get('/reviews',  async (req, res) => {
+    const user = req.user;
 
-        if (!user) {
-            return res.status(404).json({ code: 404, msg: 'User not found.' });
-        }
+    if (!user) {
+        return res.status(404).json({ code: 404, msg: 'User not found.' });
+    }
 
-        const reviews = await Review.find({ userId: user._id });
-        if (!reviews.length) {
-            return res.status(404).json({ code: 404, msg: 'No reviews found for this user.' });
-        }
-        res.status(200).json({ code: 200, msg: 'Review fetched successfully.', reviews });
-        });
-
+    const reviews = await Review.find({ userId: user._id });
+    if (!reviews.length) {
+        return res.status(404).json({ code: 404, msg: 'No reviews found for this user.' });
+    }
+    res.status(200).json({ code: 200, msg: 'Review fetched successfully.', reviews });
+    });
     
+router.delete('/reviews/:id', async (req, res) => {
+
+    const user = req.user; 
+    const reviewId = req.params.id; 
+        
+    if (!user) {
+        return res.status(404).json({ code: 404, msg: 'User not found.' });
+    }
+
+    const deletedReview = await Review.findByIdAndDelete(reviewId);
+    if (!deletedReview) {
+        return res.status(404).json({ code: 404, msg: 'Review not found in database.' });
+    }
+
+    user.reviews = user.reviews.filter((id) => id.toString() !== reviewId);
+    await user.save(); 
+
+    res.status(200).json({ code: 200, msg: 'Review removed successfully.' });
+    });   
 
 export default router;
