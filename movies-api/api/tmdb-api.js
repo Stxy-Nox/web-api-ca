@@ -170,7 +170,7 @@ export const getLanguages = async () => {
     }
   };
 
-  export const getMovieReviews = async (id = 939243) => {
+  export const getMovieReviews = async (id = 939243) => { //This is all reviews of a movies, not need to store in review collection.
     try {
         const response = await fetch(
             `https://api.themoviedb.org/3/movie/${id}/reviews?api_key=${process.env.TMDB_KEY}`

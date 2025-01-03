@@ -130,7 +130,7 @@ router.get('/tmdb/person/:id/images', asyncHandler(async (req, res) => {
 }));
 
 
-router.get('/tmdb/movie/:id/reviews', asyncHandler(async (req, res) => {
+router.get('/tmdb/movie/:id/reviews', asyncHandler(async (req, res) => {//This is all reviews of a movies, not need to store in review collection.
     const { id } = req.params;
     const reviews = await getMovieReviews(id);
     res.status(200).json(reviews);

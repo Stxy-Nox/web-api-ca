@@ -4,6 +4,7 @@ import asyncHandler from 'express-async-handler';
 const router = express.Router(); // eslint-disable-line
 import jwt from 'jsonwebtoken';
 
+
 // Get all users
 router.get('/', async (req, res) => {
     const users = await User.find();
@@ -61,109 +62,31 @@ async function authenticateUser(req, res) {
     }
 }
 
-
-router.get('/favorites', authenticate, asyncHandler(async (req, res) => {
-    const userId = req.user._id; 
-  
-    const user = await User.findById(userId).populate('favouriteMovies');
+router.post('/favorites',  async (req, res) => {
+    const user = req.user;
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ code: 404, msg: 'User not found.' });
     }
-  
-    res.status(200).json(user.favouriteMovies);
-  }));
-  
-
-router.post('/favorites', authenticate, asyncHandler(async (req, res) => {
-  const userId = req.user._id;
-  const { movieId } = req.body;
-
-  const user = await User.findById(userId);
-  if (!user) {
-    return res.status(404).json({ message: 'User not found' });
-  }
-
-  if (user.favouriteMovies.includes(movieId)) {
-    return res.status(400).json({ message: 'Movie already in favorites' });
-  }
-
-  user.favouriteMovies.push(movieId);
-  await user.save();
-
-  res.status(201).json({ message: 'Movie added to favorites', favouriteMovies: user.favouriteMovies });
-}));
-
-router.get('/playlists', authenticate, asyncHandler(async (req, res) => {
-    const userId = req.user._id;
-  
-    const user = await User.findById(userId).populate('playlists');
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+    if (!user.favouriteMovies) {
+        user.favouriteMovies = [];
     }
-  
-    res.status(200).json(user.playlists);
-  }));
 
-router.post('/playlists', authenticate, asyncHandler(async (req, res) => {
-    const userId = req.user._id;
-    const { movieId } = req.body;
-  
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-  
-    if (user.playlists.includes(movieId)) {
-      return res.status(400).json({ message: 'Movie already in playlists' });
-    }
-  
-    user.playlists.push(movieId);
+    user.favouriteMovies.push(req.body.movieId);
     await user.save();
-  
-    res.status(201).json({ message: 'Movie added to playlists', playlists: user.playlists });
-  }));
+    res.status(201).json({ code: 201, msg: 'Movie added to favorites.' });
+    
+  });
+
+router.get('/favorites',  async (req, res) => {
+const user = req.user;
+
+if (!user) {
+    return res.status(404).json({ code: 404, msg: 'User not found.' });
+}
+
+res.status(200).json(user.favouriteMovies);
+});
 
 
-
-router.delete('/favorites/:movieId', asyncHandler(async (req, res) => {
-    const userId = req.user._id; 
-    const { movieId } = req.params;
-
-    const user = await User.findById(userId);
-    if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-    }
-
-    const index = user.favouriteMovies.indexOf(movieId);
-    if (index === -1) {
-        return res.status(404).json({ message: 'Movie not in favorites' });
-    }
-
-    user.favouriteMovies.splice(index, 1); 
-    await user.save();
-
-    res.status(200).json({ message: 'Movie removed from favorites', favouriteMovies: user.favouriteMovies });
-}));
-
-
-router.delete('/playlists/:movieId', asyncHandler(async (req, res) => {
-    const userId = req.user._id; 
-    const { movieId } = req.params;
-
-    const user = await User.findById(userId);
-    if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-    }
-
-    const index = user.playlists.indexOf(movieId);
-    if (index === -1) {
-        return res.status(404).json({ message: 'Movie not in playlists' });
-    }
-
-    user.playlists.splice(index, 1); 
-    await user.save();
-
-    res.status(200).json({ message: 'Movie removed from playlists', playlists: user.playlists });
-}));
 
 export default router;
