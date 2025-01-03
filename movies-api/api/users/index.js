@@ -102,4 +102,46 @@ router.delete('/favorites',  async (req, res) => {
     
   });
 
+router.post('/playlist',  async (req, res) => {
+    const user = req.user;
+    if (!user) {
+      return res.status(404).json({ code: 404, msg: 'User not found.' });
+    }
+    if (!user.playlist) {
+        user.playlist = [];
+    }
+
+    user.playlist.push(req.body.movieId);
+    await user.save();
+    res.status(201).json({ code: 201, msg: 'Movie added to playlist.' });
+    
+  });
+
+router.get('/playlist',  async (req, res) => {
+    const user = req.user;
+
+    if (!user) {
+        return res.status(404).json({ code: 404, msg: 'User not found.' });
+    }
+
+    res.status(200).json(user.playlist);
+    });
+
+router.delete('/playlist',  async (req, res) => {
+    const user = req.user;
+    if (!user) {
+      return res.status(404).json({ code: 404, msg: 'User not found.' });
+    }
+    if (!user.playlist) {
+        return res.status(404).json({ code: 404, msg:"Playlist not found."})
+    }
+
+    user.playlist = user.playlist.filter((movieId) => movieId !== req.body.movieId);
+    await user.save();
+    res.status(200).json({ code: 200, msg: 'Movie removed from playlist.' });
+    
+  });
+
+
+
 export default router;
