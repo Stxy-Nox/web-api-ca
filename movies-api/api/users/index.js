@@ -143,7 +143,7 @@ router.delete('/playlist',  async (req, res) => {
     
   });
 
-  router.post('/reviews/',  async (req, res) => {
+  router.post('/reviews',  async (req, res) => {
     const user = req.user;
     if (!user) {
       return res.status(404).json({ code: 404, msg: 'User not found.' });
@@ -174,6 +174,34 @@ router.delete('/playlist',  async (req, res) => {
     
   });
 
-  
+  router.get('/reviews/:id',  async (req, res) => {
+    const user = req.user;
+    const reviewId = req.params.id;
+    if (!user) {
+        return res.status(404).json({ code: 404, msg: 'User not found.' });
+    }
+
+    const review = await Review.findById(reviewId);
+    if (!review) {
+        return res.status(404).json({ code: 404, msg: 'Review not found.' });
+    }
+    res.status(200).json({ code: 200, msg: 'Review fetched successfully.', review });
+    });
+
+    router.get('/reviews/',  async (req, res) => {
+        const user = req.user;
+
+        if (!user) {
+            return res.status(404).json({ code: 404, msg: 'User not found.' });
+        }
+
+        const reviews = await Review.find({ userId: user._id });
+        if (!reviews.length) {
+            return res.status(404).json({ code: 404, msg: 'No reviews found for this user.' });
+        }
+        res.status(200).json({ code: 200, msg: 'Review fetched successfully.', reviews });
+        });
+
+    
 
 export default router;
