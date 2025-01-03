@@ -10,7 +10,7 @@ import KnownForList from "../KnowForList";
 const TemplatePersonPage = ({ person, knownFor, children}) => {
 
   const {data , error, isLoading, isError } = useQuery(
-    ["presonImages", {id: person.id}],
+    ["personImages", {id: person.id}],
     getPersonImages
   );
 

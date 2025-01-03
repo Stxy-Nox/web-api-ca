@@ -107,7 +107,7 @@ export const getPerson = async (id = 2786960) => {
     }
 };
 
-export const getPresonCredits = async (id = 2786960) => {
+export const getPersonCredits = async (id = 2786960) => {
     try {
         const response = await fetch(
             `https://api.themoviedb.org/3/person/${id}/movie_credits?api_key=${process.env.TMDB_KEY}`

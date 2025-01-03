@@ -9,7 +9,7 @@ import {
     getTrendings,
     getMovie,
     getPerson,
-    getPresonCredits,
+    getPersonCredits,
     getLanguages,
     getMovieImages,
     getPersonImages,
@@ -105,7 +105,7 @@ router.get('/tmdb/person/:id', asyncHandler(async (req, res) => {
 
 router.get('/tmdb/person/:id/credits', asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const credits = await getPresonCredits(id);
+    const credits = await getPersonCredits(id);
     res.status(200).json(credits);
 }));
 

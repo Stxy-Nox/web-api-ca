@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from 'react-router-dom';
 import PageTemplate from "../components/templatePersonPage";
-import { getPreson , getPresonCredits} from '../api/tmdb-api'
+import { getPerson , getPersonCredits} from '../api/tmdb-api'
 import { useQuery } from "react-query";
 import Spinner from '../components/spinner'
 import PersonDetails from "../components/personDetails";
@@ -10,11 +10,11 @@ const PersonPage = (props) => {
   const { id } = useParams();
   const { data: personData, error:personError, isLoading:personIsLoading, isError:personIsError } = useQuery(
     ["person", {id : id}],
-    getPreson
+    getPerson
   )
   const { data: creditData, error:creditError, isLoading:creditIsLoading, isError:creditIsError } = useQuery(
     ["credit", {id : id}],
-    getPresonCredits
+    getPersonCredits
   )
 
   if (personIsLoading || creditIsLoading) {
