@@ -146,20 +146,16 @@ export const getPersonImages = (args) => {
 };
 
 
-  export const getMovieReviews = ({ queryKey }) => {
-    const [, idPart] = queryKey;
-    const { id } = idPart;
-    return fetch(
-      `https://api.themoviedb.org/3/movie/${id}/reviews?api_key=${process.env.REACT_APP_TMDB_KEY}`
-    ).then( (response) => {
+export const getMovieReviews = (args) => {
+  const [, idPart] = args.queryKey;
+  const { id } = idPart;
+  return fetch(`http://localhost:8080/api/movies/tmdb/movie/${id}/reviews`)
+    .then((response) => {
       if (!response.ok) {
         return response.json().then((error) => {
-          throw new Error(error.status_message || "Something went wrong");
+          throw new Error(error.message || "Something went wrong");
         });
       }
       return response.json();
-    })
-    .catch((error) => {
-      throw error
-   });
-  };
+    });
+};
