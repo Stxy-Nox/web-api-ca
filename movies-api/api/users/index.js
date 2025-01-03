@@ -78,15 +78,28 @@ router.post('/favorites',  async (req, res) => {
   });
 
 router.get('/favorites',  async (req, res) => {
-const user = req.user;
+    const user = req.user;
 
-if (!user) {
-    return res.status(404).json({ code: 404, msg: 'User not found.' });
-}
+    if (!user) {
+        return res.status(404).json({ code: 404, msg: 'User not found.' });
+    }
 
-res.status(200).json(user.favouriteMovies);
-});
+    res.status(200).json(user.favouriteMovies);
+    });
 
+router.delete('/favorites',  async (req, res) => {
+    const user = req.user;
+    if (!user) {
+      return res.status(404).json({ code: 404, msg: 'User not found.' });
+    }
+    if (!user.favouriteMovies) {
+        return res.status(404).json({ code: 404, msg:"Favourites not found."})
+    }
 
+    user.favouriteMovies = user.favouriteMovies.filter((movieId) => movieId !== req.body.movieId);
+    await user.save();
+    res.status(200).json({ code: 200, msg: 'Movie removed from favorites.' });
+    
+  });
 
 export default router;
