@@ -5,10 +5,9 @@ const http = axios.create({
 });
 
 http.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+
+ config.headers.Authorization = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpYXQiOjE3MzYwOTY1ODR9.e6q3M0Y8l1Bihhyq6ZizsnFJe9GgWZpI5tEEDnhO5X8`;
+  
   return config;
 });
 
@@ -31,6 +30,7 @@ export const addReview = async ( movieId, author, content, rating) => http.post(
 
 
 
-export const getPlaylists = async () => http.get("/users/playlists");
-export const addPlaylist = async (movieId) => http.post("/users/playlists", { movieId });
-export const deletePlaylist = async (movieId) => http.delete(`/users/playlists/${movieId}`);
+export const getPlaylist = async () => http.get("/users/playlist");
+export const addPlaylist = async (movieId) => http.post("/users/playlist", { movieId });
+export const deletePlaylist = async (movieId) => http.delete(`/users/playlist/${movieId}`);
+
