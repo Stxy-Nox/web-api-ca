@@ -31,18 +31,19 @@ const MoviesContextProvider = (props) => {
     fetchData();
   }, []);
 
-  const addToFavorites = (movie) => {
-    let newFavorites = [];
-    if (!favorites.includes(movie.id)){
-      newFavorites = [...favorites, movie.id];
-    }
-    
-    else{
-      newFavorites = [...favorites];
-    }
-    setFavorites(newFavorites)
-    console.log("faovourite:"+favorites);
-  };
+  const addToFavorites = useCallback(
+    async (movie) => {
+      if (!favorites.includes(movie.id)) {
+        try {
+          await addFavorite(movie.id);
+          setFavorites([...favorites, movie.id]);
+        } catch (error) {
+          console.error("Add favourites error:", error);
+        }
+      }
+    },
+    [favorites]
+  );
 
   
   const addToPlaylist = (movie) => {
@@ -62,18 +63,17 @@ const MoviesContextProvider = (props) => {
     setMyReviews( {...myReviews, [movie.id]: review } )
   };
 
-  // We will use this function in the next step
-  const removeFromFavorites = (movie) => {
-    setFavorites( favorites.filter(
-      (mId) => mId !== movie.id
-    ) )
-  };
-
-  const removeFromPlaylist = (movie) => {
-    setPlaylists( playlists.filter(
-      (mId) => mId !== movie.id
-    ))
-  };
+  const removeFromFavorites = useCallback(
+    async (movie) => {
+      try {
+        await deleteFavorite(movie.id);
+        setFavorites(favorites.filter((id) => id !== movie.id));
+      } catch (error) {
+        console.error("remove favourites error: ", error);
+      }
+    },
+    [favorites]
+  );
 
   return (
     <MoviesContext.Provider
