@@ -7,7 +7,7 @@ import { getMovie } from "../api/tmdb-api";
 import RemoveFormPlaylist from "../components/cardIcons/removeFromPlaylist";
 
 const PlaylistPage = () => {
-    const {playlists: movieIds } = useContext(MoviesContext);
+    const {playlist: movieIds } = useContext(MoviesContext);
 
     const playlistMovieQueries = useQueries(
         movieIds.map((movieId) => {

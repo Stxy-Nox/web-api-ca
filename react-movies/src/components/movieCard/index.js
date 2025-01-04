@@ -19,7 +19,7 @@ import HowToRegIcon from '@mui/icons-material/HowToReg';
 
 export default function MovieCard({movie, action}) {
   const { favorites, addToFavorites } = useContext(MoviesContext);
-  const { playlists, addToPlaylists } = useContext(MoviesContext);
+  const { playlist, addToPlaylist } = useContext(MoviesContext);
   
   if (favorites.find((id) => id === movie.id)) {
     movie.favorite = true;

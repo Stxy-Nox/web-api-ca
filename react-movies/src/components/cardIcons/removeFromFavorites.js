@@ -4,11 +4,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { MoviesContext } from "../../contexts/moviesContext";
 
 const RemoveFromFavoritesIcon = ({ movie }) => {
-  const context = useContext(MoviesContext);
+  const {  removeFromFavorites } = useContext(MoviesContext);
 
   const handleRemoveFromFavorites = (e) => {
     e.preventDefault();
-    context.removeFromFavorites(movie);
+    console.log('Removing movie:', movie);
+    removeFromFavorites(movie);
   };
   return (
     <IconButton

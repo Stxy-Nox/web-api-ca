@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   getFavorites,
   addFavorite,
   deleteFavorite,
   addReview,
-  getPlaylists,
+  getPlaylist,
   addPlaylist,
   deletePlaylist,
 } from "../api/user-api";
@@ -13,7 +13,7 @@ export const MoviesContext = React.createContext(null);
 const MoviesContextProvider = (props) => {
   const [favorites, setFavorites] = useState( [] )
   const [myReviews, setMyReviews] = useState( {} ) 
-  const [playlists, setPlaylists] = useState( [] )
+  const [playlist, setPlaylist] = useState( [] )
 
 
   useEffect(() => {
@@ -22,8 +22,8 @@ const MoviesContextProvider = (props) => {
         const favoriteMovies = await getFavorites();
         setFavorites(favoriteMovies.map((movie) => movie.id));
 
-        const playlistMovies = await getPlaylists();
-        setPlaylists(playlistMovies.map((movie) => movie.id));
+        const playlistMovies = await getPlaylist();
+        setPlaylist(playlistMovies.map((movie) => movie.id));
       } catch (error) {
         console.error("load data error:", error);
       }
@@ -38,7 +38,7 @@ const MoviesContextProvider = (props) => {
           await addFavorite(movie.id);
           setFavorites([...favorites, movie.id]);
         } catch (error) {
-          console.error("Add favourites error:", error);
+          console.error("Add favorites error:", error);
         }
       }
     },
@@ -51,17 +51,17 @@ const MoviesContextProvider = (props) => {
         await deleteFavorite(movie.id);
         setFavorites(favorites.filter((id) => id !== movie.id));
       } catch (error) {
-        console.error("remove favourites error: ", error);
+        console.error("remove favorites error: ", error);
       }
     },
     [favorites]
   );
 
   const addToPlaylist = async (movie) => {
-    if (!playlists.includes(movie.id)) {
+    if (!playlist.includes(movie.id)) {
       try {
         await addPlaylist(movie.id);
-        setPlaylists([...playlists, movie.id]);
+        setPlaylist([...playlist, movie.id]);
       } catch (error) {
         console.error("add to playlist error:", error);
       }
@@ -71,9 +71,9 @@ const MoviesContextProvider = (props) => {
   const removeFromPlaylist = async (movie) => {
     try {
       await deletePlaylist(movie.id);
-      setPlaylists(playlists.filter((id) => id !== movie.id));
+      setPlaylist(playlist.filter((id) => id !== movie.id));
     } catch (error) {
-      console.error("从播放列表移除失败：", error);
+      console.error("remove from playlist error: ", error);
     }
   };
 
@@ -93,7 +93,7 @@ const MoviesContextProvider = (props) => {
         addToFavorites,
         removeFromFavorites,
         addReview,
-        playlists,
+        playlist,
         addToPlaylist,
         removeFromPlaylist
       }}
