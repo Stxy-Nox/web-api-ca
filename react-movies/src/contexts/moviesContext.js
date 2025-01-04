@@ -45,24 +45,6 @@ const MoviesContextProvider = (props) => {
     [favorites]
   );
 
-  
-  const addToPlaylist = (movie) => {
-    let newPlaylists = [];
-    if (!playlists.includes(movie.id)){
-      newPlaylists = [...playlists, movie.id];
-    }
-
-    else{
-      newPlaylists = [...playlists];
-    }
-    setPlaylists(newPlaylists)
-    console.log("Playlist:"+playlists);
-  }
-
-  const addReview = (movie, review) => {
-    setMyReviews( {...myReviews, [movie.id]: review } )
-  };
-
   const removeFromFavorites = useCallback(
     async (movie) => {
       try {
@@ -74,6 +56,26 @@ const MoviesContextProvider = (props) => {
     },
     [favorites]
   );
+
+  const addToPlaylist = async (movie) => {
+    if (!playlists.includes(movie.id)) {
+      try {
+        await addPlaylist(movie.id);
+        setPlaylists([...playlists, movie.id]);
+      } catch (error) {
+        console.error("add to playlist error:", error);
+      }
+    }
+  };
+
+  const removeFromPlaylist = async (movie) => {
+    try {
+      await deletePlaylist(movie.id);
+      setPlaylists(playlists.filter((id) => id !== movie.id));
+    } catch (error) {
+      console.error("从播放列表移除失败：", error);
+    }
+  };
 
   return (
     <MoviesContext.Provider
