@@ -4,6 +4,7 @@ import Review from '../reviews/reviewModel';
 import asyncHandler from 'express-async-handler';
 const router = express.Router(); // eslint-disable-line
 import jwt from 'jsonwebtoken';
+import authenticate from '../../authenticate';
 
 
 // Get all users
@@ -63,47 +64,59 @@ async function authenticateUser(req, res) {
     }
 }
 
-router.post('/favorites',  async (req, res) => {
+router.post('/favorites', authenticate, async (req, res) => {
     const user = req.user;
     if (!user) {
       return res.status(404).json({ code: 404, msg: 'User not found.' });
     }
-    if (!user.favouriteMovies) {
-        user.favouriteMovies = [];
+    if (!user.favoriteMovies) {
+        user.favoriteMovies = [];
     }
 
-    user.favouriteMovies.push(req.body.movieId);
+    user.favoriteMovies.push(req.body.movieId);
     await user.save();
     res.status(201).json({ code: 201, msg: 'Movie added to favorites.' });
     
   });
 
-router.get('/favorites',  async (req, res) => {
+router.get('/favorites', authenticate, async (req, res) => {
     const user = req.user;
 
     if (!user) {
         return res.status(404).json({ code: 404, msg: 'User not found.' });
     }
 
-    res.status(200).json(user.favouriteMovies);
+    res.status(200).json(user.favoriteMovies);
     });
+    router.delete('/favorites/:movieId', authenticate, async (req, res) => {
+ 
+          const user = req.user;
+          const { movieId } = req.params;
+      
+          if (!user) {
+            return res.status(404).json({ code: 404, msg: 'User not found.' });
+          }
+      
+          if (!user.favoriteMovies || user.favoriteMovies.length === 0) {
+            return res.status(404).json({ code: 404, msg: 'No favorites found.' });
+          }
+      
+          const filteredMovies = user.favoriteMovies.filter(
+            (id) => id.toString() !== movieId.toString()
+          );
+      
 
-router.delete('/favorites',  async (req, res) => {
-    const user = req.user;
-    if (!user) {
-      return res.status(404).json({ code: 404, msg: 'User not found.' });
-    }
-    if (!user.favouriteMovies) {
-        return res.status(404).json({ code: 404, msg:"Favourites not found."})
-    }
+      
+          user.favoriteMovies = filteredMovies;
+          user.markModified('favoriteMovies'); 
+          await user.save();
+      
+          res.status(200).json({ code: 200, msg: 'Movie removed from favorites.' });
 
-    user.favouriteMovies = user.favouriteMovies.filter((movieId) => movieId !== req.body.movieId);
-    await user.save();
-    res.status(200).json({ code: 200, msg: 'Movie removed from favorites.' });
-    
-  });
+      });
+      
 
-router.post('/playlist',  async (req, res) => {
+router.post('/playlist', authenticate, async (req, res) => {
     const user = req.user;
     if (!user) {
       return res.status(404).json({ code: 404, msg: 'User not found.' });
@@ -118,7 +131,7 @@ router.post('/playlist',  async (req, res) => {
     
   });
 
-router.get('/playlist',  async (req, res) => {
+router.get('/playlist', authenticate, async (req, res) => {
     const user = req.user;
 
     if (!user) {
@@ -128,22 +141,34 @@ router.get('/playlist',  async (req, res) => {
     res.status(200).json(user.playlist);
     });
 
-router.delete('/playlist',  async (req, res) => {
-    const user = req.user;
-    if (!user) {
-      return res.status(404).json({ code: 404, msg: 'User not found.' });
-    }
-    if (!user.playlist) {
-        return res.status(404).json({ code: 404, msg:"Playlist not found."})
-    }
+    router.delete('/playlist/:movieId', authenticate, async (req, res) => {
+ 
+          const user = req.user; 
+          const { movieId } = req.params; 
+      
+          if (!user) {
+            return res.status(404).json({ code: 404, msg: 'User not found.' });
+          }
 
-    user.playlist = user.playlist.filter((movieId) => movieId !== req.body.movieId);
-    await user.save();
-    res.status(200).json({ code: 200, msg: 'Movie removed from playlist.' });
-    
-  });
+          if (!user.playlist || user.playlist.length === 0) {
+            return res.status(404).json({ code: 404, msg: 'Playlist not found.' });
+          }
 
-  router.post('/reviews',  async (req, res) => {
+          const updatedPlaylist = user.playlist.filter(
+            (id) => id.toString() !== movieId.toString()
+          );
+
+      
+          user.playlist = updatedPlaylist;
+      
+          user.markModified('playlist'); 
+          await user.save();
+      
+          res.status(200).json({ code: 200, msg: 'Movie removed from playlist.' });
+
+      });
+
+  router.post('/reviews', authenticate, async (req, res) => {
     const user = req.user;
     if (!user) {
       return res.status(404).json({ code: 404, msg: 'User not found.' });
@@ -174,7 +199,7 @@ router.delete('/playlist',  async (req, res) => {
     
   });
 
-  router.get('/reviews/:id',  async (req, res) => {
+  router.get('/reviews/:id', authenticate, async (req, res) => {
     const user = req.user;
     const reviewId = req.params.id;
     if (!user) {
@@ -188,7 +213,7 @@ router.delete('/playlist',  async (req, res) => {
     res.status(200).json({ code: 200, msg: 'Review fetched successfully.', review });
     });
 
-router.get('/reviews',  async (req, res) => {
+router.get('/reviews', authenticate, async (req, res) => {
     const user = req.user;
 
     if (!user) {
@@ -202,7 +227,7 @@ router.get('/reviews',  async (req, res) => {
     res.status(200).json({ code: 200, msg: 'Review fetched successfully.', reviews });
     });
     
-router.delete('/reviews/:id', async (req, res) => {
+router.delete('/reviews/:id',authenticate, async (req, res) => {
 
     const user = req.user; 
     const reviewId = req.params.id; 
