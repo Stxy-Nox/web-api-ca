@@ -77,6 +77,15 @@ const MoviesContextProvider = (props) => {
     }
   };
 
+  const addReview = async (movie, reviewText) => {
+    try {
+      await addReview(movie.id, reviewText);
+      setMyReviews((prevReviews) => [...prevReviews, { movieId: movie.id, review: reviewText }]);
+    } catch (error) {
+      console.error("add review error: ", error);
+    }
+  };
+
   return (
     <MoviesContext.Provider
       value={{
