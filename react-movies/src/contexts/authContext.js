@@ -1,5 +1,5 @@
 import React, { useState, createContext } from "react";
-import { login, signup } from "../api/movies-api";
+import { login, signup } from "../api/movies-api.js";
 
 export const AuthContext = createContext(null);
 
