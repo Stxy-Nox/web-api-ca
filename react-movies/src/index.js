@@ -18,6 +18,7 @@ import PersonPage from "./pages/personDetailsPage.js";
 import ProtectedRoutes from './protectedRoutes.js';
 import LoginPage from "./pages/loginPage.js";
 import SignupPage from "./pages/signupPage.js";
+import AuthContextProvider from "./contexts/authContext.js";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,6 +36,7 @@ const App = () => {
       <BrowserRouter>
         <SiteHeader />
         <MoviesContextProvider>
+        <AuthContextProvider>
           <Routes>
             <Route element={<ProtectedRoutes />}>
               <Route path="/movies/favorites" element={<FavoriteMoviesPage />} />
@@ -52,6 +54,7 @@ const App = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
           </Routes>
+          </AuthContextProvider>
         </MoviesContextProvider>
       </BrowserRouter>
       <ReactQueryDevtools initialIsOpen={false} />
