@@ -15,6 +15,9 @@ import PlaylistPage from "./pages/playlistPage.js";
 import TrendingPage from "./pages/trendingPage.js";
 import PopularPeoplePage from "./pages/popularPeoplePage.js";
 import PersonPage from "./pages/personDetailsPage.js";
+import ProtectedRoutes from './components/ProtectedRoutes';
+import LoginPage from "./pages/loginPage.js";
+import SignupPage from "./pages/signupPage.js";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -33,18 +36,21 @@ const App = () => {
         <SiteHeader />
         <MoviesContextProvider>
           <Routes>
-            <Route path="/movies/favorites" element={<FavoriteMoviesPage />} />
-            <Route path="/movies/playlist" element={<PlaylistPage />} />
-            <Route path="/reviews/:id" element={ <MovieReviewPage /> } />
+            <Route element={<ProtectedRoutes />}>
+              <Route path="/movies/favorites" element={<FavoriteMoviesPage />} />
+              <Route path="/movies/playlist" element={<PlaylistPage />} />
+              <Route path="/reviews/form" element={<AddMovieReviewPage />} />
+            </Route>
+            <Route path="/reviews/:id" element={<MovieReviewPage />} />
             <Route path="/movies/:id" element={<MoviePage />} />
-            <Route path="/people/:id" element={<PersonPage/>} />
+            <Route path="/people/:id" element={<PersonPage />} />
             <Route path="/" element={<HomePage />} />
-            <Route path="/movies/trending/:timeWindow" element={<TrendingPage/>} />
-            <Route path="/movies/upcoming" element={<UpcomingPage/>}/>
-            <Route path="*" element={ <Navigate to="/" /> } />
-            <Route path="/reviews/form" element={ <AddMovieReviewPage /> } />
-            <Route path="/people" element={ <PopularPeoplePage />} />
-
+            <Route path="/movies/trending/:timeWindow" element={<TrendingPage />} />
+            <Route path="/movies/upcoming" element={<UpcomingPage />} />
+            <Route path="/people" element={<PopularPeoplePage />} />
+            <Route path="*" element={<Navigate to="/" />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
           </Routes>
         </MoviesContextProvider>
       </BrowserRouter>
