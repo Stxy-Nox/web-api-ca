@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken';
 import authenticate from '../../authenticate';
 
 
+
 // Get all users
 router.get('/', async (req, res) => {
     const users = await User.find();
@@ -44,8 +45,13 @@ router.put('/:id', async (req, res) => {
 });
 
 async function registerUser(req, res) {
-    // Add input validation logic here
-    await User.create(req.body);
+    const { username, password } = req.body;
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(409).json({ success: false, msg: 'Username already exists.' });
+    }
+    const newUser = new User({ username, password });
+    await newUser.save();
     res.status(201).json({ success: true, msg: 'User successfully created.' });
 }
 
