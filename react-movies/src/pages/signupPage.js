@@ -9,7 +9,19 @@ const SignupPage = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-
+  const handleSignup = async () => {
+    try {
+      const success = await register(username, password);
+      if (success) {
+        alert("Registration successful! Please login.");
+        navigate("/login");
+      } else {
+        setError("Registration failed. Please try again.");
+      }
+    } catch (err) {
+      setError("An error occurred during registration.");
+    }
+  };
 
   return (
     <div>
