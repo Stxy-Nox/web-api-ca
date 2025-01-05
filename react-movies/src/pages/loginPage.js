@@ -4,39 +4,47 @@ import { AuthContext } from '../contexts/authContext';
 import { Link } from "react-router-dom";
 
 const LoginPage = props => {
-    const context = useContext(AuthContext);
-
+    const { authenticate, isAuthenticated } = useContext(AuthContext);
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
 
-    const login = () => {
-        context.authenticate(userName, password);
+    const login = async () => {
+        await authenticate(username, password);
+        navigate("/")
     };
 
     let location = useLocation();
 
-    // Set 'from' to path where browser is redirected after a successful login - either / or the protected path user requested
-    const { from } = location.state ? { from: location.state.from.pathname } : { from: "/" };
 
-    if (context.isAuthenticated === true) {
-        return <Navigate to={from} />;
+    if (isAuthenticated) {
+        return <Navigate to="/" />;
     }
 
     return (
-        <>
-            <h2>Login page</h2>
-            <p>You must log in to view the protected pages </p>
-            <input id="username" placeholder="user name" onChange={e => {
-                setUserName(e.target.value);
-            }}></input><br />
-            <input id="password" type="password" placeholder="password" onChange={e => {
-                setPassword(e.target.value);
-            }}></input><br />
-            {/* Login web form  */}
-            <button onClick={login}>Log in</button>
-            <p>Not Registered?
-                <Link to="/signup">Sign Up!</Link></p>
-        </>
+        <div>
+        <h2>Login</h2>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <br />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <br />
+        <button onClick={login}>Log In</button>
+        <p>
+          Don't have an account? <Link to="/signup">Sign Up</Link>
+        </p>
+      </div>
     );
 };
 
