@@ -15,7 +15,7 @@ import PlaylistPage from "./pages/playlistPage.js";
 import TrendingPage from "./pages/trendingPage.js";
 import PopularPeoplePage from "./pages/popularPeoplePage.js";
 import PersonPage from "./pages/personDetailsPage.js";
-import ProtectedRoutes from './components/ProtectedRoutes';
+import ProtectedRoutes from './protectedRoutes.js';
 import LoginPage from "./pages/loginPage.js";
 import SignupPage from "./pages/signupPage.js";
 
